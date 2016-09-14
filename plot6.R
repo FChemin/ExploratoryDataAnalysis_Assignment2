@@ -17,18 +17,30 @@ SCC <- readRDS("Source_Classification_Code.rds")
 
 VehicleSCC <- grepl("vehicle", SCC$SCC.Level.Two, ignore.case = TRUE)
 subSCC <- SCC[VehicleSCC,]$SCC
-
 VehicleNEI <- NEI[NEI$SCC %in% subSCC,]
-baltimoreVehicle <- subset(VehicleNEI, fips == "24510")
 
-# Plot using ggplot2
+# Data for Baltimore City
 
-png("plot5.png")
+BaltimoreVehicles <- subset(VehicleNEI, fips == "24510")
+BaltimoreVehicles$city <- "Baltimore City"
 
-ggplot(data = baltimoreVehicle, mapping = aes(factor(year), Emissions)) + 
-  geom_bar(stat="identity", fill = "red", width = 0.75) + 
+# Data for Los Angeles County
+
+LAVehicles  <- subset(VehicleNEI, fips == "06037")
+LAVehicles$city <- "Los Angeles County"
+
+# Merge datasets
+
+CompVechicles <- rbind(BaltimoreVehicles, LAVehicles)
+
+# Plot data to compare city
+
+png("plot6.png")
+
+ggplot(data = CompVechicles, mapping = aes(factor(year), Emissions)) + 
+  geom_bar(stat="identity", aes(fill=year), width = 0.75) + facet_grid(.~city) +
   theme_bw() + guides(fill=FALSE) + 
   labs(x="year", y="Emissions of PM2.5 (in Tons)") + 
-  labs(title="Emissions from Vehicles in Baltimore City (1999-2008)")
+  labs(title="Vehicle Source Emissions of PM2.5 in Baltimore & LA (1999-2008)")
 
 dev.off()
