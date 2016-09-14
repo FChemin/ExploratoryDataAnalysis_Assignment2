@@ -26,7 +26,7 @@ combcoalNEI <- NEI[NEI$SCC %in% subSCC,]
 
 png("plot4.png")
 
-ggplot(data = combcoalNEI, mapping = aes(factor(year), Emissions/10^5)) + 
+ggplot(data = combcoalNEI, mapping = aes(factor(year), Emissions)) + 
   geom_bar(stat="identity", fill = "blue", width = 0.75) + 
   theme_bw() +
   labs(x="year", y="Coal Related Emissions of PM2.5 (in Tons)") + 
